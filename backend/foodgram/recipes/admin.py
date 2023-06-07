@@ -61,7 +61,7 @@ class RecipesAdmin(admin.ModelAdmin):
 
     @admin.display(empty_value="0", description='Добавили в избранное раз')
     def favorites_count(self, obj):
-        return Favorites.objects.filter(recipes=obj).count()
+        return obj.favorites.all().count()
 
 
 admin.site.register(Recipes, RecipesAdmin)

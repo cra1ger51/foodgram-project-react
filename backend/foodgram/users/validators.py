@@ -7,7 +7,7 @@ from users.models import User
 
 def validate_username(value):
     regex = re.compile(r'^[\w.@+-]+')
-    if value == 'me':
+    if str(value).lower() == 'me':
         raise ValidationError('Недопустимое имя пользователя.')
     elif not regex.match(value):
         raise ValidationError('Имя содержит недопустимые символы.')

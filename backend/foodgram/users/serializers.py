@@ -1,7 +1,7 @@
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 
-from .models import Subscriptions, User
+from .models import User
 from .validators import (validate_email, validate_username,
                          validate_username_exists)
 
@@ -31,10 +31,8 @@ class CustomUserSerializer(UserSerializer):
     def subscribe_check(self, obj):
         user = self.context['request'].user
 
-        if user.is_anonymous:
-            return False
-
-        return Subscriptions.objects.filter(user=user, author=obj).exists()
+        if user.is_authenticated:
+            return user.follower.filter(author=obj).exists()
 
     class Meta:
         model = User
@@ -64,7 +62,7 @@ class SubscribeSerializer(CustomUserSerializer):
         if user == author:
             raise serializers.ValidationError(
                 'На самого себя подписаться нельзя!')
-        if (Subscriptions.objects.filter(author=author, user=user).exists()):
+        if (user.follower.filter(author=author).exists()):
             raise serializers.ValidationError(
                 'Вы уже подписаны на данного пользователя!')
         return data

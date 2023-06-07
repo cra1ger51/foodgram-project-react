@@ -1,27 +1,20 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-ADMIN = 'admin'
-
 
 class User(AbstractUser):
-    USER = 'user'
-    ROLES = (
-        (USER, 'User'),
-        (ADMIN, 'Admin'),
-    )
-    role = models.CharField(
-        max_length=10,
-        choices=ROLES,
-        default=USER)
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('id', )
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователь'
 
     def __str__(self):
         return self.username
+
+    @property
+    def is_admin(self):
+        return self.is_staff or self.is_superuser
 
 
 class Subscriptions(models.Model):
@@ -39,7 +32,7 @@ class Subscriptions(models.Model):
     )
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('id', )
         verbose_name = 'Подписки'
         verbose_name_plural = 'Подписки'
         constraints = [

@@ -1,3 +1,4 @@
+from collections import Counter
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -67,29 +68,40 @@ class RecipesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipes
-        fields = ('id', 'tags', 'author', 'ingredients', 'is_favorited',
-                  'is_in_shopping_cart', 'name', 'image', 'text',
+        fields = ('id',
+                  'tags',
+                  'author',
+                  'ingredients',
+                  'is_favorited',
+                  'is_in_shopping_cart',
+                  'name',
+                  'image',
+                  'text',
                   'cooking_time')
 
-    def favorite_check(self, obj):
+    def check(self, obj, target):
         request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        return Favorites.objects.filter(
-            user=request.user, recipes=obj).exists()
+        if request and request.user.is_authenticated:
+            return target.objects.filter(
+                user=request.user, recipes=obj).exists()
+
+    def favorite_check(self, obj):
+        return self.check(obj, Favorites)
 
     def shopping_cart_check(self, obj):
-        request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        return ShoppingCart.objects.filter(
-            user=request.user, recipes=obj).exists()
+        return self.check(obj, ShoppingCart)
 
     def validate(self, data):
+        user = self.context.get('request').user
+        recipe_name = data['name']
+        if user and recipe_name:
+            if Recipes.objects.filter(author=user, name=recipe_name).exists():
+                raise serializers.ValidationError(
+                    'Нельзя добавить рецепт дважды')
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError(
-                'Недопустимое количество ингредиентов: 0')
+                'Добавьте хотя бы 1 ингредиент!')
         ingredient_list = []
         for ingredient_item in ingredients:
             ingredient = get_object_or_404(Ingredients,
@@ -103,18 +115,33 @@ class RecipesSerializer(serializers.ModelSerializer):
                     f'Количество ингредиента {ingredient.name} < 0'
                 )
         data['ingredients'] = ingredients
+        tags_list = self.initial_data['tags']
+        if not tags_list:
+            raise serializers.ValidationError(
+                    'Добавьте хотя бы 1 тег!'
+                )
+        tags_counter = Counter(tags_list)
+        duplicated_tags = [key for (key, value) in tags_counter.items()
+                           if value > 1 and key]
+        if duplicated_tags:
+            raise serializers.ValidationError(
+                    'Добавлять одинаковые теги нельзя!'
+                )
+        cooking_time = data['cooking_time']
+        if cooking_time < 1:
+            raise serializers.ValidationError(
+                    'Время приготовление должно быть больше 0!'
+                )
         return data
 
     def ingredientsrecipe_create(self, ingredients, recipe):
-        for ingredient in ingredients:
-            amount = ingredient['amount']
-            ingredient_obj = get_object_or_404(
-                Ingredients, pk=ingredient['id'])
-            IngredientsRecipes.objects.create(
+        IngredientsRecipes.objects.bulk_create(
+            [IngredientsRecipes(
+                ingredients=Ingredients.objects.get(id=ingredient['id']),
                 recipes=recipe,
-                ingredients=ingredient_obj,
-                amount=amount
-            )
+                amount=ingredient['amount']
+            ) for ingredient in ingredients]
+        )
 
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')

@@ -30,7 +30,7 @@ class Tags(models.Model):
     )
 
     class Meta:
-        ordering = ['-id']
+        ordering = ('-id', )
         verbose_name = 'Теги'
         verbose_name_plural = 'Теги'
         constraints = [
@@ -50,14 +50,14 @@ class Ingredients(models.Model):
         help_text='Ингредиент'
     )
     measurement_unit = models.CharField(
-        max_length=50,
+        max_length=10,
         null=False,
         verbose_name='Единица измерения',
         help_text='Единица измерения'
     )
 
     class Meta:
-        ordering = ['-id']
+        ordering = ('-id', )
         verbose_name = 'Ингредиенты'
         verbose_name_plural = 'Ингредиенты'
         constraints = [
@@ -117,7 +117,7 @@ class Recipes(models.Model):
     )
 
     class Meta:
-        ordering = ['-id']
+        ordering = ('-id', )
         verbose_name = 'Рецепты'
         verbose_name_plural = 'Рецепты'
         constraints = [
@@ -180,7 +180,7 @@ class IngredientsRecipes(models.Model):
     )
 
     class Meta:
-        ordering = ['-recipes']
+        ordering = ('-recipes', )
         verbose_name = 'Ингредиенты и рецепты'
         verbose_name_plural = 'Ингредиенты и рецепты'
         constraints = [

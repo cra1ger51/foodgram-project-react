@@ -1,4 +1,3 @@
-
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
@@ -6,8 +5,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Subscriptions, User
-from .pagination import CustomPagination
 from .serializers import SubscribeSerializer
+from core.pagination import CustomPagination
 
 
 class CustomUserViewset(UserViewSet):

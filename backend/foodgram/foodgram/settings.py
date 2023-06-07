@@ -1,14 +1,17 @@
 import os
 
+from dotenv import load_dotenv
 from pathlib import Path
+
+load_dotenv()
 
 AUTH_USER_MODEL = 'users.User'
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-9$xw0k2rx4p6v1_itc8fqg%m^p8%_z_o4x$m*gpet*o!-az6h2'
+SECRET_KEY = os.getenv('DJANGO_KEY')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
@@ -27,7 +30,8 @@ INSTALLED_APPS = [
     'django_filters',
     'users',
     'api',
-    'recipes'
+    'recipes',
+    'core'
 ]
 
 MIDDLEWARE = [
