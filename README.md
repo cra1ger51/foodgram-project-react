@@ -31,14 +31,16 @@ http://158.160.52.119/admin/
 ```
 
 ### Примененные технологии
- > Python 3.7.9
- > Django 3.2.18
- > djangorestframework 3.14.0
- > gunicorn 20.1.0
- > reportlab 4.0.4
+```
+ - Python 3.7.9
+ - Django 3.2.18
+ - djangorestframework 3.14.0
+ - gunicorn 20.1.0
+ - reportlab 4.0.4
+```
 
 ### Шаблон наполнение .env:
-
+```
 DJANGO_KEY=django-insecure-9$xw0k2rx4p6v1_itc8fqg%m^p8%_z_o4x$m*gpet*o!-az6h2
 DEBUG=False
 DB_ENGINE=django.db.backends.postgresql
@@ -47,7 +49,7 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 DB_HOST=db
 DB_PORT=5432
-
+```
 ### Как запустить проект:
 
 набор команд для запуска приложения в контейнерах:
