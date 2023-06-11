@@ -1,15 +1,18 @@
-import io
+import io, os
 
 from django.http import FileResponse
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
+from foodgram.settings import BASE_DIR
+
 
 def list_to_pdf(data):
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer)
-    pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
+    ttf_path = os.path.join(BASE_DIR, 'static/data/', 'arial.ttf')
+    pdfmetrics.registerFont(TTFont('Arial', ttf_path))
     p.setFont("Arial", 20)
     p.drawString(250, 800, "Список покупок:")
     height = 760
