@@ -44,7 +44,7 @@ class Tags(models.Model):
 
 class Ingredients(models.Model):
     name = models.CharField(
-        max_length=50,
+        max_length=100,
         null=False,
         verbose_name='Ингредиент',
         help_text='Ингредиент'

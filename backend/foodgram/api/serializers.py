@@ -1,4 +1,3 @@
-from collections import Counter
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -84,6 +83,7 @@ class RecipesSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return target.objects.filter(
                 user=request.user, recipes=obj).exists()
+        return False
 
     def favorite_check(self, obj):
         return self.check(obj, Favorites)
@@ -110,9 +110,9 @@ class RecipesSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     f'Ингредиент {ingredient.name} уже добавлен!')
             ingredient_list.append(ingredient)
-            if int(ingredient_item['amount']) < 0:
+            if int(ingredient_item['amount']) < 1:
                 raise serializers.ValidationError(
-                    f'Количество ингредиента {ingredient.name} < 0'
+                    f'Количество ингредиента {ingredient.name} < 1'
                 )
         data['ingredients'] = ingredients
         tags_list = self.initial_data['tags']
@@ -120,10 +120,8 @@ class RecipesSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                     'Добавьте хотя бы 1 тег!'
                 )
-        tags_counter = Counter(tags_list)
-        duplicated_tags = [key for (key, value) in tags_counter.items()
-                           if value > 1 and key]
-        if duplicated_tags:
+        unique_tags_list = list(set(tags_list))
+        if len(tags_list) > len(unique_tags_list):
             raise serializers.ValidationError(
                     'Добавлять одинаковые теги нельзя!'
                 )
