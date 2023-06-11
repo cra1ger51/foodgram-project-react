@@ -1,4 +1,5 @@
-import io, os
+import io
+import os
 
 from django.http import FileResponse
 from reportlab.pdfbase import pdfmetrics
