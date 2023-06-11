@@ -22,7 +22,7 @@ services:
     volumes:
       - postgres_db:/var/lib/postgresql/data/
     env_file:
-      - ../backend/foodgram/.env
+      - ./.env
 
   web:
     image: cra1ger/foodgram_backend:v1
@@ -34,7 +34,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ../backend/foodgram/.env
+      - ./.env
     
 
 volumes:
