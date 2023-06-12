@@ -1,4 +1,3 @@
-from django.core.validators import validate_email as valid_email
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 
@@ -14,7 +13,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         allow_blank=False
     )
     email = serializers.EmailField(max_length=254,
-                                   validators=[valid_email, validate_email],
+                                   validators=[validate_email],
                                    allow_blank=False)
 
     class Meta:

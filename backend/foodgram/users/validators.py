@@ -1,5 +1,6 @@
 import re
 
+from django.core.validators import validate_email as valid_email
 from rest_framework.exceptions import ValidationError
 
 from users.models import User
@@ -22,3 +23,7 @@ def validate_email(value):
     if User.objects.filter(email=value).exists():
         raise ValidationError('Пользователь с такой почтой '
                               'уже зарегестрирован')
+    try:
+        valid_email(value)
+    except ValidationError as e:
+        print('Недопустимый адрес почты', e)
