@@ -80,10 +80,10 @@ class RecipesSerializer(serializers.ModelSerializer):
 
     def check(self, obj, target):
         request = self.context.get('request')
-        if request and request.user.is_authenticated:
-            return target.objects.filter(
-                user=request.user, recipes=obj).exists()
-        return False
+        return (
+            request.user.is_authenticated
+            and target.objects.filter(user=request.user, recipes=obj).exists()
+        )
 
     def favorite_check(self, obj):
         return self.check(obj, Favorites)

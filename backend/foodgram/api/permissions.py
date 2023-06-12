@@ -14,6 +14,5 @@ class CustomPermission(BasePermission):
             or (request.user.is_authenticated
                 and (request.method == 'POST'
                      or obj.author == request.user
-                     or request.user.is_staff
-                     or request.user.is_superuser))
+                     or request.user.is_admin))
         )

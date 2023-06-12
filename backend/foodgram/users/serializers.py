@@ -12,8 +12,8 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         validators=[validate_username, validate_username_exists],
         allow_blank=False
     )
-    email = serializers.CharField(max_length=254, validators=[validate_email],
-                                  allow_blank=False)
+    email = serializers.EmailField(max_length=254, validators=[validate_email],
+                                   allow_blank=False)
 
     class Meta:
         model = User
