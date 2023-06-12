@@ -93,8 +93,9 @@ class RecipesSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         user = self.context.get('request').user
+        request_method = self.context.get('request').method
         recipe_name = data['name']
-        if user and recipe_name:
+        if user and recipe_name and request_method == 'POST':
             if Recipes.objects.filter(author=user, name=recipe_name).exists():
                 raise serializers.ValidationError(
                     'Нельзя добавить рецепт дважды')

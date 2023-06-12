@@ -65,7 +65,7 @@ jobs:
           script: |
             sudo docker-compose stop
             sudo docker-compose rm web
-            sudo docker image rm cra1ger/foodgram_backend:v1
+            sudo docker pull cra1ger/foodgram_backend:v1
             touch .env
             echo DJANGO_KEY=${{ secrets.DJANGO_KEY }} >> .env
             echo DEBUG=${{ secrets.DEBUG }} >> .env
