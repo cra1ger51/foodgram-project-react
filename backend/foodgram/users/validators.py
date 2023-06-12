@@ -1,6 +1,6 @@
 import re
 
-from django.core.validators import validate_email as valid_email
+# from django.core.validators import validate_email as valid_email
 from rest_framework.exceptions import ValidationError
 
 from users.models import User
