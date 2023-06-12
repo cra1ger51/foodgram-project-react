@@ -35,7 +35,7 @@ class IngredientsViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     filter_backends = (filters.SearchFilter, )
     pagination_class = None
-    search_fields = ('^name',)
+    search_fields = ('@name',)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 
 
