@@ -22,6 +22,11 @@ class CustomUserCreateSerializer(UserCreateSerializer):
             'last_name', 'password',
         )
 
+    def create(self, validated_data):
+        email = validated_data.get("email", None)
+        validated_data.pop("email")
+        return User.objects.create(email=email, **validated_data)
+
 
 class CustomUserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField(
