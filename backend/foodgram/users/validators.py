@@ -24,5 +24,3 @@ def validate_email(value):
     if User.objects.filter(email=value).exists():
         raise ValidationError('Пользователь с такой почтой '
                               'уже зарегестрирован')
-    elif valid_email(value):
-        raise ValidationError('Некорректнаый адрес почты')
