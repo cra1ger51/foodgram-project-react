@@ -20,7 +20,7 @@ def validate_username_exists(value):
 
 
 def validate_email(value):
-    valid_email(value)
+    # valid_email(value)
     if User.objects.filter(email=value).exists():
         raise ValidationError('Пользователь с такой почтой '
                               'уже зарегестрирован')
