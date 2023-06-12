@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, permissions, status, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from .filters import IngredientsFilter
 from .permissions import CustomPermission
 from .serializers import (IngredientsSerializer,
                           RecipesSerializer,
@@ -32,10 +34,12 @@ class IngredientsViewSet(viewsets.ModelViewSet):
     queryset = Ingredients.objects.all()
     serializer_class = IngredientsSerializer
     http_method_names = ['get']
+    # filter_backends = (filters.SearchFilter,)
+    # search_fields = ('^name',)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = IngredientsFilter
     lookup_field = 'id'
-    filter_backends = (filters.SearchFilter, )
     pagination_class = None
-    search_fields = ('name',)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 
 
