@@ -37,7 +37,7 @@ class IngredientsViewSet(viewsets.ModelViewSet):
     # search_fields = ('name',)
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('^name',)
-    lookup_field = 'id'
+    # lookup_field = 'id'
     pagination_class = None
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 

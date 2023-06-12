@@ -1,3 +1,4 @@
+from django.core.validators import validate_email as valid_email
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 
@@ -12,7 +13,8 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         validators=[validate_username, validate_username_exists],
         allow_blank=False
     )
-    email = serializers.EmailField(max_length=254, validators=[validate_email],
+    email = serializers.EmailField(max_length=254,
+                                   validators=[valid_email, validate_email],
                                    allow_blank=False)
 
     class Meta:
@@ -21,11 +23,6 @@ class CustomUserCreateSerializer(UserCreateSerializer):
             'email', 'id', 'username', 'first_name',
             'last_name', 'password',
         )
-
-    def create(self, validated_data):
-        email = validated_data.get("email", None)
-        validated_data.pop("email")
-        return User.objects.create(email=email, **validated_data)
 
 
 class CustomUserSerializer(UserSerializer):
